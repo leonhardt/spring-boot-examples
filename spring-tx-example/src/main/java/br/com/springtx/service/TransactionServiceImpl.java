@@ -17,7 +17,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final String rollbackForInfo = "force-rollback";
 
     @Autowired
-    private TransactionRepository customerRepository;
+    private TransactionRepository transactionRepository;
 
     @Autowired
     private TransactionTemplate transactionTemplate;
@@ -30,7 +30,7 @@ public class TransactionServiceImpl implements TransactionService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void saveWithTransaction(String info) throws Exception {
-        customerRepository.save(new Transaction(info));
+        transactionRepository.save(new Transaction(info));
         // forcing rollback
         if (info.equals(rollbackForInfo))
             throw new Exception("Rolling back");
@@ -44,7 +44,7 @@ public class TransactionServiceImpl implements TransactionService {
         transactionTemplate.execute(callback ->{
             Transaction transaction;
             try {
-                transaction = customerRepository.save(new Transaction(String.format("transaction-template: %s", info)));
+                transaction = transactionRepository.save(new Transaction(String.format("transaction-template: %s", info)));
                 if (info.equals(rollbackForInfo))
                     throw new Exception("Rolling back inside transaction template");
             }catch (Exception ex){
@@ -60,7 +60,7 @@ public class TransactionServiceImpl implements TransactionService {
      * @throws Exception
      */
     public void saveWithoutTransaction() throws Exception {
-        customerRepository.save(new Transaction("will save forever without @Transactional annotation"));
+        transactionRepository.save(new Transaction("will save forever without @Transactional annotation"));
         // rollback will not work
         if (rollbackForInfo.equals(rollbackForInfo))
             throw new Exception("rollback will not work because it's running without @Transactional annotation");
