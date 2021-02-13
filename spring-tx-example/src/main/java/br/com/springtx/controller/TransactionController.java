@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Spring transactions examples
  */
 @RestController
-@RequestMapping("/v1/transaction")
+@RequestMapping("/api/transactions")
 public class TransactionController {
 
     @Autowired
