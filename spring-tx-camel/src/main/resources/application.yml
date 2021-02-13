@@ -1,0 +1,51 @@
+camel:
+  springboot:
+    # The Camel context name
+    name: SpringTxCamel
+  rest:
+    component: servlet
+  component:
+    servlet:
+      mapping:
+        contextPath: /api/*
+
+mysql:
+  service:
+    # The host of the MySQL database server, can be customized using
+    # the 'MYSQL_SERVICE_HOST' env variable
+    host:     localhost
+    # The port of the MySQL database server, can be customized using
+    # the 'MYSQL_SERVICE_PORT' env variable
+    port:     3306
+    # The database to use, can be customized using the 'MYSQL_SERVICE_DATABASE'
+    # env variable
+    database: tx_example
+    # The database username, can be customized using the 'MYSQL_SERVICE_USERNAME'
+    # env variable
+    username: root
+    # The database password, can be customized using the 'MYSQL_SERVICE_PASSWORD'
+    # env variable
+    password: xpto123
+
+spring:
+  # Spring JDBC configuration
+  datasource:
+    url:      jdbc:mysql://${mysql.service.host}:${mysql.service.port}/${mysql.service.database}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: ${mysql.service.username}
+    password: ${mysql.service.password}
+    initialization-mode: always
+
+  # Spring Data JPA configuration
+  jpa:
+    database: mysql
+    generate-ddl: false
+    open-in-view: false
+    hibernate:
+      # To be updated in real production usage!
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comment: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
